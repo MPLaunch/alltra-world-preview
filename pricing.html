@@ -215,6 +215,33 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function(){try{
+  if(navigator.webdriver)return;
+  var v=new URLSearchParams(location.search).get('v');
+  if(!v)return;
+  var slug="alltra-world-preview", label="Alltra World - Ozz Metals";
+  var k="mpl_seen_"+slug, last=+localStorage.getItem(k)||0;
+  if(Date.now()-last<432e5)return;
+  var fired=false,dwell=0,t=null;
+  function live(){return document.visibilityState==="visible";}
+  function send(how){
+    if(fired||!live())return; fired=true; if(t)clearInterval(t);
+    localStorage.setItem(k,String(Date.now()));
+    new Image().src="https://mplaunch.com.au/api/preview-view?slug="+encodeURIComponent(slug)
+      +"&label="+encodeURIComponent(label)
+      +"&src="+encodeURIComponent(v)+"&via="+how+"&t="+Date.now();
+  }
+  function start(){
+    t=setInterval(function(){if(!live())return; dwell+=500; if(dwell>=5000)send("dwell");},500);
+    ["pointerdown","scroll","keydown"].forEach(function(e){
+      addEventListener(e,function(){send("interaction");},{once:true,passive:true});});
+  }
+  if(document.prerendering){document.addEventListener("prerenderingchange",start,{once:true});}
+  else{start();}
+}catch(e){}})();
+</script>
 <script>
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"], a[href*=".html#"]');

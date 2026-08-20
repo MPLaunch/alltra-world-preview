@@ -62,6 +62,42 @@ const ART_LEDGER = `
   </g>
 </svg>`;
 
+/* ── open-tracking beacon ──────────────────────────────────────────────────────
+   THREE gates, all required (see mplaunch-lead-pitch/references/research-and-build.md):
+     1. ARM      ?v=<channel>  — a bare URL is silent forever, so we/QA/screen-share cost nothing
+     2. VISIBILITY            — kills Safari "Preload Top Hit" and Chrome prerender
+     3. DWELL 5s or a real tap — stops a re-loaded background tab reporting an open
+   Never document.hasFocus() — unreliable in the iOS Messages webview, where SMS links open.
+   No `phone` param is passed: we have no phone number for this prospect and will not invent one;
+   the endpoint treats it as optional and simply omits the "Call them" line.            */
+const BEACON = `
+<script>
+(function(){try{
+  if(navigator.webdriver)return;
+  var v=new URLSearchParams(location.search).get('v');
+  if(!v)return;
+  var slug="alltra-world-preview", label="Alltra World - Ozz Metals";
+  var k="mpl_seen_"+slug, last=+localStorage.getItem(k)||0;
+  if(Date.now()-last<432e5)return;
+  var fired=false,dwell=0,t=null;
+  function live(){return document.visibilityState==="visible";}
+  function send(how){
+    if(fired||!live())return; fired=true; if(t)clearInterval(t);
+    localStorage.setItem(k,String(Date.now()));
+    new Image().src="https://mplaunch.com.au/api/preview-view?slug="+encodeURIComponent(slug)
+      +"&label="+encodeURIComponent(label)
+      +"&src="+encodeURIComponent(v)+"&via="+how+"&t="+Date.now();
+  }
+  function start(){
+    t=setInterval(function(){if(!live())return; dwell+=500; if(dwell>=5000)send("dwell");},500);
+    ["pointerdown","scroll","keydown"].forEach(function(e){
+      addEventListener(e,function(){send("interaction");},{once:true,passive:true});});
+  }
+  if(document.prerendering){document.addEventListener("prerenderingchange",start,{once:true});}
+  else{start();}
+}catch(e){}})();
+<\/script>`;
+
 /* ───────────────────────────── shared chrome ──────────────────────────────── */
 
 const NAV = [
@@ -152,6 +188,7 @@ const foot = `</main>
     </div>
   </div>
 </footer>
+${BEACON}
 <script>
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"], a[href*=".html#"]');
