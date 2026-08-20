@@ -1,20 +1,11 @@
 // ALLTRA WORLD — concept rebuild (MP Launch, 2026-08-20)
 // node build.mjs  → emits index.html, pricing.html, about.html sharing one chrome.
 //
-// ── CLAIMS DISCIPLINE ────────────────────────────────────────────────────────
-// EVERY factual statement below traces to alltra.world's own published pages
-// (home, /p/about-us) captured 2026-08-20. Nothing is inferred, upgraded or
-// invented. Where their site does not state a fact, this rebuild stays silent
-// rather than filling the gap. See CLAIMS-SOURCE.md for the line-by-line table.
+// Every factual statement below traces to alltra.world's own published pages
+// (home and /p/about-us), captured 2026-08-20. Nothing is inferred or invented;
+// where the source site is silent, this rebuild stays silent rather than filling
+// the gap. Full source table lives in the prospect folder, not in this repo.
 //
-// Deliberately NOT carried over from the live site (these are the trust leaks):
-//   • "ALLTRA COIN LUCKY DROP — Click HERE and Reward Yourself NOW!"
-//   • "To get it free all You need to do is ... Start your personal Gold backed Economy"
-//   • ASIC / AUSTRAC footer links (imply regulatory endorsement that is not claimed)
-//   • Empty "What Our Client Say" testimonial rail
-//   • Identical feature lists priced $220 → $6,500
-//   • Typos rendered in production ("Valadator", "Regiser")
-//   • Stale "Copyright © 2023"
 import { writeFileSync } from "node:fs";
 
 const YEAR = 2026;
